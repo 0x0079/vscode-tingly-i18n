@@ -16,25 +16,55 @@
   ],
   "contributes": {
     "commands": [
-      {
-        "command": "tingly.doctor",
-        "title": "Tingly: Doctor",
-        "category": "Tingly"
-      }
+      { "command": "tingly.doctor", "title": "Tingly: Doctor", "category": "Tingly" },
+      { "command": "tingly.rebuildIndex", "title": "Tingly: Rebuild Index", "category": "Tingly" },
+      { "command": "tingly.extract", "title": "Tingly: Extract Hard String", "category": "Tingly" },
+      { "command": "tingly.translate.key", "title": "Tingly: Translate Key", "category": "Tingly" },
+      { "command": "tingly.revealKey", "title": "Tingly: Reveal Key", "category": "Tingly" }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "tingly", "title": "Tingly i18n", "icon": "$(globe)" }
+      ]
+    },
+    "views": {
+      "tingly": [
+        { "id": "tingly.tree", "name": "Locale Tree" }
+      ]
+    },
     "configuration": {
       "title": "Tingly i18n",
       "properties": {
         "tingly.enabled": {
-          "type": "boolean",
-          "default": true,
+          "type": "boolean", "default": true,
           "description": "Enable Tingly i18n in this workspace."
+        },
+        "tingly.localesPaths": {
+          "type": "array", "items": { "type": "string" },
+          "default": ["locales", "src/locales", "public/locales"],
+          "description": "Workspace-relative roots to scan for locale files."
+        },
+        "tingly.pathMatcher": {
+          "type": "string",
+          "description": "Optional explicit path matcher pattern, e.g. '{locale}/{namespaces}.{ext}'. If omitted, common patterns are tried."
+        },
+        "tingly.displayLanguage": {
+          "type": "string", "default": "en",
+          "description": "Active display locale used for inlay hints, hover, etc."
+        },
+        "tingly.sourceLanguage": {
+          "type": "string", "default": "en",
+          "description": "Authoritative source locale."
+        },
+        "tingly.namespace": {
+          "type": "boolean", "default": false,
+          "description": "Treat each locale file as belonging to a namespace bucket."
         },
         "tingly.render.mode": {
           "type": "string",
           "enum": ["inlay", "inplace", "both", "off"],
           "default": "inlay",
-          "description": "How translated values are surfaced inline. 'inlay' = InlayHints (recommended). 'inplace' = decoration that replaces the key visually. 'both' = both. 'off' = neither."
+          "description": "How translated values are surfaced inline."
         },
         "tingly.detection.mode": {
           "type": "string",
@@ -43,9 +73,8 @@
           "description": "AST-first uses each framework's analyzer with regex fallback on parse error. Regex-only is the legacy i18n-ally behavior."
         },
         "tingly.diagnostics.showRegexFallback": {
-          "type": "boolean",
-          "default": false,
-          "description": "Surface an Information diagnostic when a key was matched via regex fallback rather than AST."
+          "type": "boolean", "default": false,
+          "description": "Surface a Hint diagnostic when a key was matched via regex fallback rather than AST."
         }
       }
     }
@@ -56,6 +85,7 @@
     "clean": "rimraf dist *.vsix",
     "lint": "echo lint stub",
     "package": "vsce package --no-dependencies --out tingly-extension.vsix",
+    "test": "vitest run",
     "test:integration": "echo integration tests come in phase 2"
   },
   "dependencies": {
@@ -71,6 +101,7 @@
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^3.1.1",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
   }
 }
