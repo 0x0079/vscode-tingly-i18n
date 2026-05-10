@@ -1,0 +1,30 @@
+{
+  "name": "@tingly/core",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Framework-agnostic domain layer: Loader, LocaleTree, Parsers, PathMatcher, KeyDetector facade.",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "lint": "echo lint stub"
+  },
+  "dependencies": {
+    "@tingly/framework-contract": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  }
+}

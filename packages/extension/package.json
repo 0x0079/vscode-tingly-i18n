@@ -1,0 +1,76 @@
+{
+  "name": "@tingly/extension",
+  "private": true,
+  "version": "0.0.0",
+  "displayName": "Tingly i18n",
+  "description": "All-in-one i18n for VS Code (next-generation i18n-ally).",
+  "publisher": "tingly",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=20.10"
+  },
+  "main": "./dist/extension.cjs",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "tingly.doctor",
+        "title": "Tingly: Doctor",
+        "category": "Tingly"
+      }
+    ],
+    "configuration": {
+      "title": "Tingly i18n",
+      "properties": {
+        "tingly.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Tingly i18n in this workspace."
+        },
+        "tingly.render.mode": {
+          "type": "string",
+          "enum": ["inlay", "inplace", "both", "off"],
+          "default": "inlay",
+          "description": "How translated values are surfaced inline. 'inlay' = InlayHints (recommended). 'inplace' = decoration that replaces the key visually. 'both' = both. 'off' = neither."
+        },
+        "tingly.detection.mode": {
+          "type": "string",
+          "enum": ["ast-first", "regex-only"],
+          "default": "ast-first",
+          "description": "AST-first uses each framework's analyzer with regex fallback on parse error. Regex-only is the legacy i18n-ally behavior."
+        },
+        "tingly.diagnostics.showRegexFallback": {
+          "type": "boolean",
+          "default": false,
+          "description": "Surface an Information diagnostic when a key was matched via regex fallback rather than AST."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist *.vsix",
+    "lint": "echo lint stub",
+    "package": "vsce package --no-dependencies --out tingly-extension.vsix",
+    "test:integration": "echo integration tests come in phase 2"
+  },
+  "dependencies": {
+    "@tingly/core": "workspace:*",
+    "@tingly/framework-contract": "workspace:*",
+    "@tingly/framework-general": "workspace:*",
+    "@tingly/framework-react": "workspace:*",
+    "@tingly/framework-vue": "workspace:*",
+    "@tingly/framework-next-intl": "workspace:*",
+    "@tingly/framework-svelte": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.1.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  }
+}

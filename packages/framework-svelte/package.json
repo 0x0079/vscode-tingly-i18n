@@ -1,0 +1,31 @@
+{
+  "name": "@tingly/framework-svelte",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Stream S: svelte-i18n + paraglide adapter.",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "lint": "echo lint stub"
+  },
+  "dependencies": {
+    "@tingly/framework-contract": "workspace:*",
+    "@tingly/ast-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/framework-contract" },
+    { "path": "./packages/ast-utils" },
+    { "path": "./packages/core" },
+    { "path": "./packages/test-kit" },
+    { "path": "./packages/framework-general" },
+    { "path": "./packages/framework-react" },
+    { "path": "./packages/framework-vue" },
+    { "path": "./packages/framework-next-intl" },
+    { "path": "./packages/framework-svelte" },
+    { "path": "./packages/extension" }
+  ]
+}

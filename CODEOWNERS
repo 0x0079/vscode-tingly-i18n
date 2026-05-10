@@ -1,0 +1,18 @@
+# Stream isolation: framework adapter packages are exclusively owned by their stream.
+# Touching another stream's package or the shared core in a stream PR is forbidden;
+# core changes go through a separate "core-evolution" PR with all stream owners reviewing.
+
+/packages/framework-contract/   @0x0079/core-owners
+/packages/ast-utils/            @0x0079/core-owners
+/packages/core/                 @0x0079/core-owners
+/packages/extension/            @0x0079/core-owners
+/packages/test-kit/             @0x0079/core-owners
+/packages/framework-general/    @0x0079/core-owners
+
+/packages/framework-react/      @0x0079/stream-r-owners
+/packages/framework-vue/        @0x0079/stream-v-owners
+/packages/framework-next-intl/  @0x0079/stream-n-owners
+/packages/framework-svelte/     @0x0079/stream-s-owners
+
+/docs/                          @0x0079/core-owners
+/.github/                       @0x0079/core-owners
