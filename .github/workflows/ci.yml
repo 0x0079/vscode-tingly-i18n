@@ -25,9 +25,9 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm -r typecheck
+      - run: pnpm install --frozen-lockfile
       - run: pnpm -r build
+      - run: pnpm -r typecheck
       - run: pnpm test
 
   package:
@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
       - run: pnpm -r build
       - run: pnpm -F @tingly/extension package
       - uses: actions/upload-artifact@v4
