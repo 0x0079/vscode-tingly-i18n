@@ -2,7 +2,7 @@
   "name": "@tingly/ast-utils",
   "private": true,
   "version": "0.0.0",
-  "description": "Shared AST utilities (BabelTraverser, ScopeBinding, ConstantResolver, TemplateLiteralExpander, JSXAttributeWalker, Vue/Svelte/HTML traversers). Consumed by all framework streams.",
+  "description": "Shared AST utilities (BabelTraverser, ScopeBinding, ConstantResolver, TemplateLiteralExpander, JSXAttributeWalker). Consumed by all framework streams.",
   "license": "MIT",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -18,10 +18,19 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist",
-    "lint": "echo lint stub"
+    "lint": "echo lint stub",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.25.6",
+    "@babel/traverse": "^7.25.6",
+    "@babel/types": "^7.25.6",
+    "@tingly/framework-contract": "workspace:*"
   },
   "devDependencies": {
+    "@types/babel__traverse": "^7.20.6",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
   }
 }
