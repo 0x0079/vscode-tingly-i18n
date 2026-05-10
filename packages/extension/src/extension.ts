@@ -5,6 +5,10 @@ import { EventBus } from './eventBus'
 import { Logger } from './logger'
 import { LocaleLoader, KeyDetector } from '@tingly/core'
 import { GeneralFramework } from '@tingly/framework-general'
+import { ReactI18nextFramework } from '@tingly/framework-react'
+import { VueI18nFramework } from '@tingly/framework-vue'
+import { NextIntlFramework } from '@tingly/framework-next-intl'
+import { SvelteI18nFramework } from '@tingly/framework-svelte'
 import { registerDoctorCommand } from './commands/doctor'
 import {
   registerRebuildIndexCommand,
@@ -28,6 +32,15 @@ import { registerTreeViews } from './providers/treeViews/tree'
 
 let container: Container | undefined
 
+/** Order matters: real frameworks first, then GeneralFramework as universal fallback. */
+const FRAMEWORK_CANDIDATES: readonly Framework[] = [
+  ReactI18nextFramework,
+  VueI18nFramework,
+  NextIntlFramework,
+  SvelteI18nFramework,
+  GeneralFramework
+]
+
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const logger = new Logger('Tingly i18n')
   const eventBus = new EventBus()
@@ -42,9 +55,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     return
   }
 
-  // Layout: which dirs to scan + which path patterns to try.
   const layout: LocaleSourceLayout = {
-    roots: cfg.get<string[]>('tingly.localesPaths') ?? ['locales', 'src/locales', 'public/locales'],
+    roots: cfg.get<string[]>('tingly.localesPaths') ?? ['locales', 'src/locales', 'public/locales', 'messages'],
     patterns: cfg.get<string[]>('tingly.pathMatcher')
       ? [cfg.get<string>('tingly.pathMatcher')!]
       : ['{locale}.{ext}', '{locale}/{namespaces}.{ext}', '{namespaces}/{locale}.{ext}']
@@ -66,11 +78,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     watchers.push(w)
     context.subscriptions.push(w)
   }
-  container.register('localeWatcher', watchers[0] ?? new LocaleWatcher(loader, layout, folders[0]!, logger))
+  if (watchers[0]) container.register('localeWatcher', watchers[0])
 
-  // Active framework selection.
-  const candidates: Framework[] = [GeneralFramework] // streams will register additional candidates here
-  const active = await detectFrameworks(candidates, folders, logger)
+  const active = await detectFrameworks(FRAMEWORK_CANDIDATES, folders, logger)
   const framework = active[0] ?? GeneralFramework
   container.register('framework', framework)
 
@@ -82,7 +92,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   })
   container.register('detector', detector)
 
-  // Commands.
   context.subscriptions.push(
     registerDoctorCommand(container),
     registerRebuildIndexCommand(container),
@@ -91,7 +100,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     registerRevealKeyCommand()
   )
 
-  // Providers.
   context.subscriptions.push(
     registerInlayHints(detector, framework, host),
     registerDecorations(detector, host),
@@ -105,7 +113,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     registerTreeViews(loader)
   )
 
-  // Refresh detector cache on locale changes.
   loader.on('changed' as never, (() => detector.invalidate()) as never)
 
   logger.info(`Tingly i18n activated (framework=${framework.id}, locales=${loader.getKeys().length} keys)`)

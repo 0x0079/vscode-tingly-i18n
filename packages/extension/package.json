@@ -41,7 +41,7 @@
         },
         "tingly.localesPaths": {
           "type": "array", "items": { "type": "string" },
-          "default": ["locales", "src/locales", "public/locales"],
+          "default": ["locales", "src/locales", "public/locales", "messages"],
           "description": "Workspace-relative roots to scan for locale files."
         },
         "tingly.pathMatcher": {
@@ -89,6 +89,7 @@
     "test:integration": "echo integration tests come in phase 2"
   },
   "dependencies": {
+    "@tingly/ast-utils": "workspace:*",
     "@tingly/core": "workspace:*",
     "@tingly/framework-contract": "workspace:*",
     "@tingly/framework-general": "workspace:*",

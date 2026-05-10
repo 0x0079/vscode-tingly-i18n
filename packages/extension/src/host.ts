@@ -12,16 +12,19 @@ import type {
   ITemplateLiteralExpander,
   ILogger
 } from '@tingly/framework-contract'
+import { parseJs as astParseJs } from '@tingly/ast-utils'
 import type { Logger } from './logger'
 
 /**
  * Builds a FrameworkHost backed by VS Code APIs and core services.
  *
- * Phase 2 ships stub implementations of the AST-related services
- * (parserAst/vueParser/svelteParser/scopeBinding/constResolver/templateExpander)
- * — real impls land with @tingly/ast-utils in the next commit. While stubs are
- * in place, framework adapters falling back to regex still work because
- * KeyDetector handles that path.
+ * - parserAst now delegates to @tingly/ast-utils (shared LRU cache across the
+ *   process). Streams call parseJs directly today, but the port is wired so a
+ *   future framework can use host.parserAst without a separate cache layer.
+ * - vueParser/svelteParser/htmlParser remain stubs in v1; SFC <script>
+ *   extraction lives in ast-utils.extractScriptBlocks and is consumed directly
+ *   by Stream V and Stream S. Adding @vue/compiler-sfc / svelte/compiler is
+ *   tracked for a future release.
  */
 export function buildHost(opts: {
   loader: ILoaderReadOnly
@@ -31,7 +34,7 @@ export function buildHost(opts: {
   return {
     loader: opts.loader,
     config: opts.config,
-    parserAst: stubParserAst,
+    parserAst: realParserAst,
     vueParser: stubVueParser,
     svelteParser: stubSvelteParser,
     htmlParser: stubHtmlParser,
@@ -42,9 +45,18 @@ export function buildHost(opts: {
   }
 }
 
-const stubParserAst: IParserAstService = {
-  parseJs: () => ({ ast: undefined, errors: [] })
+const realParserAst: IParserAstService = {
+  parseJs(doc) {
+    const parsed = astParseJs({
+      uri: doc.uri,
+      source: doc.getText(),
+      version: doc.version,
+      languageId: doc.languageId
+    })
+    return { ast: parsed.ast, errors: parsed.errors }
+  }
 }
+
 const stubVueParser: IVueSfcService = {
   parseSfc: () => ({ i18nBlocks: [] })
 }
