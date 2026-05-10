@@ -2,6 +2,9 @@ import type { ILoaderReadOnly } from '@tingly/framework-contract'
 import { LocaleTree, type LocaleTreeLeaf } from './LocaleTree'
 import type { Locale, LocaleNode, ParsedFile } from './types'
 
+type ChangedListener = () => void
+type ErrorListener = (err: Error) => void
+
 export interface LocaleLoaderOptions {
   /** Active display locale (used as the default for getValueByKey). */
   displayLanguage: Locale
@@ -12,8 +15,8 @@ export interface LocaleLoaderOptions {
 }
 
 export interface ILoaderEvents {
-  on(event: 'changed', listener: () => void): { dispose(): void }
-  on(event: 'error', listener: (err: Error) => void): { dispose(): void }
+  on(event: 'changed', listener: ChangedListener): { dispose(): void }
+  on(event: 'error', listener: ErrorListener): { dispose(): void }
 }
 
 /**
@@ -94,10 +97,25 @@ export class LocaleLoader implements ILoaderReadOnly, ILoaderEvents {
 
   // ---------- ILoaderEvents ----------
 
-  on(event: 'changed' | 'error', listener: never): { dispose(): void } {
-    const set = event === 'changed' ? this.listeners.changed : this.listeners.error
-    set.add(listener as never)
-    return { dispose: () => set.delete(listener as never) }
+  on(event: 'changed', listener: ChangedListener): { dispose(): void }
+  on(event: 'error', listener: ErrorListener): { dispose(): void }
+  on(
+    event: 'changed' | 'error',
+    listener: ChangedListener | ErrorListener
+  ): { dispose(): void } {
+    if (event === 'changed') {
+      const fn = listener as ChangedListener
+      this.listeners.changed.add(fn)
+      return { dispose: () => this.listeners.changed.delete(fn) }
+    }
+    const fn = listener as ErrorListener
+    this.listeners.error.add(fn)
+    return { dispose: () => this.listeners.error.delete(fn) }
+  }
+
+  /** Public read-only access to the in-memory tree for a namespace (or default). */
+  getTree(namespace?: string): LocaleTree | undefined {
+    return this.pickTree(namespace)
   }
 
   // ---------- helpers ----------

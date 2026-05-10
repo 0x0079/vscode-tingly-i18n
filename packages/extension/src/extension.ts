@@ -113,7 +113,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     registerTreeViews(loader)
   )
 
-  loader.on('changed' as never, (() => detector.invalidate()) as never)
+  loader.on('changed', () => detector.invalidate())
 
   logger.info(`Tingly i18n activated (framework=${framework.id}, locales=${loader.getKeys().length} keys)`)
 }

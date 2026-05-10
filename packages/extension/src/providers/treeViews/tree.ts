@@ -28,8 +28,7 @@ export function registerTreeViews(loader: LocaleLoader): vscode.Disposable {
     onDidChangeTreeData: undefined,
     getTreeItem: x => x,
     getChildren(element) {
-      // Phase 2: simple flat-by-namespace listing. Hierarchical view ships next commit.
-      const root: LocaleTreeBranch | undefined = (loader as unknown as { trees: Map<string, { root: LocaleTreeBranch }> }).trees.get('')?.root
+      const root: LocaleTreeBranch | undefined = loader.getTree()?.root
       if (!root) return []
       const branch = element ? element.node : root
       if (branch.type !== 'branch') return []
