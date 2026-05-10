@@ -1,0 +1,1 @@
+# vscode-tingly-i18n
