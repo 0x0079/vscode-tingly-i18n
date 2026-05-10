@@ -16,3 +16,6 @@ export type { TemplateExpansion } from './templateLiteral'
 
 export { walkJsxAttributes } from './jsxAttribute'
 export type { JsxAttrInfo } from './jsxAttribute'
+
+export { extractScriptBlocks, translateRange } from './sfcScripts'
+export type { ScriptBlock } from './sfcScripts'
