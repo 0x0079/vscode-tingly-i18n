@@ -144,6 +144,9 @@ importers:
         specifier: workspace:*
         version: link:../framework-contract
     devDependencies:
+      '@tingly/test-kit':
+        specifier: workspace:*
+        version: link:../test-kit
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(postcss@8.5.14)(typescript@5.9.3)
@@ -156,6 +159,12 @@ importers:
 
   packages/framework-next-intl:
     dependencies:
+      '@babel/traverse':
+        specifier: ^7.25.6
+        version: 7.29.0
+      '@babel/types':
+        specifier: ^7.25.6
+        version: 7.29.0
       '@tingly/ast-utils':
         specifier: workspace:*
         version: link:../ast-utils
@@ -166,6 +175,9 @@ importers:
       '@tingly/test-kit':
         specifier: workspace:*
         version: link:../test-kit
+      '@types/babel__traverse':
+        specifier: ^7.20.6
+        version: 7.28.0
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(postcss@8.5.14)(typescript@5.9.3)
@@ -178,6 +190,12 @@ importers:
 
   packages/framework-react:
     dependencies:
+      '@babel/traverse':
+        specifier: ^7.25.6
+        version: 7.29.0
+      '@babel/types':
+        specifier: ^7.25.6
+        version: 7.29.0
       '@tingly/ast-utils':
         specifier: workspace:*
         version: link:../ast-utils
@@ -188,6 +206,9 @@ importers:
       '@tingly/test-kit':
         specifier: workspace:*
         version: link:../test-kit
+      '@types/babel__traverse':
+        specifier: ^7.20.6
+        version: 7.28.0
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(postcss@8.5.14)(typescript@5.9.3)
@@ -200,6 +221,12 @@ importers:
 
   packages/framework-svelte:
     dependencies:
+      '@babel/traverse':
+        specifier: ^7.25.6
+        version: 7.29.0
+      '@babel/types':
+        specifier: ^7.25.6
+        version: 7.29.0
       '@tingly/ast-utils':
         specifier: workspace:*
         version: link:../ast-utils
@@ -210,6 +237,9 @@ importers:
       '@tingly/test-kit':
         specifier: workspace:*
         version: link:../test-kit
+      '@types/babel__traverse':
+        specifier: ^7.20.6
+        version: 7.28.0
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(postcss@8.5.14)(typescript@5.9.3)
@@ -222,6 +252,12 @@ importers:
 
   packages/framework-vue:
     dependencies:
+      '@babel/traverse':
+        specifier: ^7.25.6
+        version: 7.29.0
+      '@babel/types':
+        specifier: ^7.25.6
+        version: 7.29.0
       '@tingly/ast-utils':
         specifier: workspace:*
         version: link:../ast-utils
@@ -232,6 +268,9 @@ importers:
       '@tingly/test-kit':
         specifier: workspace:*
         version: link:../test-kit
+      '@types/babel__traverse':
+        specifier: ^7.20.6
+        version: 7.28.0
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(postcss@8.5.14)(typescript@5.9.3)

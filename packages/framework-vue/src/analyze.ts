@@ -128,7 +128,7 @@ function isVueCallee(site: { calleeName?: string; isMember: boolean; path: NodeP
   }
   // i18n.t / i18n.global.t
   if (name === 't' || name === 'tc') {
-    let obj: t.Expression | t.Super = site.path.node.callee
+    let obj: t.Expression | t.Super | t.V8IntrinsicIdentifier = site.path.node.callee
     if (obj.type === 'MemberExpression') obj = obj.object
     while (obj.type === 'MemberExpression') obj = obj.object
     if (obj.type === 'Identifier' && (obj.name === 'i18n' || obj.name === '$i18n')) return true

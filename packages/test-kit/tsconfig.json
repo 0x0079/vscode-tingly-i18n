@@ -3,8 +3,11 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../framework-contract" }]
+  "include": [
+    "src/**/*"
+  ]
 }

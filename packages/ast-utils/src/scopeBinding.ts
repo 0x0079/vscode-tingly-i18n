@@ -25,9 +25,20 @@ export function resolveTBinding(
 
   // i18n.t(...), i18next.t(...), etc.
   if (callee.type === 'MemberExpression') {
-    if (callee.property.type === 'Identifier' && callee.property.name === 't') {
-      return { kind: 'static', via: 'imported' }
+    if (callee.property.type !== 'Identifier') return { kind: 'dynamic' }
+    const propName = callee.property.name
+    // next-intl shape: t.rich(...) / t.markup(...) / t.raw(...) — resolve the
+    // object identifier so callers see the same useTranslations-derived keyPrefix
+    // as a bare t() call.
+    if (
+      (propName === 'rich' || propName === 'markup' || propName === 'raw') &&
+      callee.object.type === 'Identifier'
+    ) {
+      const objBinding = callPath.scope.getBinding(callee.object.name)
+      if (!objBinding) return { kind: 'static', via: 'imported' }
+      return resolveBinding(objBinding.path, new Set())
     }
+    if (propName === 't') return { kind: 'static', via: 'imported' }
     return { kind: 'dynamic' }
   }
 
@@ -53,8 +64,14 @@ function resolveBinding(
   }
 
   if (bindingPath.isVariableDeclarator()) {
-    const init = bindingPath.get('init') as NodePath<t.Expression | null>
+    let init = bindingPath.get('init') as NodePath<t.Expression | null>
     if (!init || !init.node) return { kind: 'static', via: 'aliased' }
+
+    // const t = await getTranslations('Auth') — unwrap AwaitExpression
+    if (init.isAwaitExpression()) {
+      init = init.get('argument') as NodePath<t.Expression | null>
+      if (!init || !init.node) return { kind: 'static', via: 'aliased' }
+    }
 
     // const t = useTranslation('common')
     if (init.isCallExpression()) return resolveCallInit(init)

@@ -15,8 +15,14 @@ export function registerDecorations(
   const decorationType = vscode.window.createTextEditorDecorationType({
     after: { color: new vscode.ThemeColor('editorCodeLens.foreground'), margin: '0 0 0 0.5em' }
   })
+  // VS Code's renderer ignores `display: none`. To visually hide the original
+  // key, collapse the glyphs (letterSpacing + opacity 0) and inject the
+  // translated value via a `before:` content-text on the same range. This is
+  // the i18n-ally key-replacement trick.
   const inplaceType = vscode.window.createTextEditorDecorationType({
-    textDecoration: 'none; display: none;'
+    letterSpacing: '-1ch',
+    opacity: '0',
+    before: { color: new vscode.ThemeColor('editorCodeLens.foreground') }
   })
 
   const subs: vscode.Disposable[] = [decorationType, inplaceType]
@@ -38,8 +44,11 @@ export function registerDecorations(
       const value = host.loader.getValueByKey(ref.key)
       if (value === undefined) continue
       if (r.contains(cursor)) continue // cursor-aware degrade
-      after.push({ range: r, renderOptions: { after: { contentText: ` → ${value}` } } })
-      if (cfg === 'inplace') hide.push({ range: r })
+      if (cfg === 'inplace') {
+        hide.push({ range: r, renderOptions: { before: { contentText: value } } })
+      } else {
+        after.push({ range: r, renderOptions: { after: { contentText: ` → ${value}` } } })
+      }
     }
     editor.setDecorations(decorationType, after)
     editor.setDecorations(inplaceType, hide)

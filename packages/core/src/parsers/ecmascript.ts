@@ -26,7 +26,7 @@ export const EcmascriptLiteParser: ICoreParser = {
       languageId: ctx.filepath.endsWith('.ts') ? 'typescript' : 'javascript'
     })
     const nodes: LocaleNode[] = []
-    const errors: ParsedFile['errors'] = parsed.errors.map(m => ({ message: m }))
+    const errors: { message: string; offset?: number }[] = parsed.errors.map(m => ({ message: m }))
 
     let rootObject: t.ObjectExpression | undefined
     traverse(parsed.ast, {
@@ -121,9 +121,10 @@ function walk(
       })
       continue
     }
+    const offset = value.start ?? undefined
     errors.push({
       message: `unsupported value kind '${value.type}' at ${next.join('.')}`,
-      offset: value.start ?? undefined
+      ...(offset !== undefined ? { offset } : {})
     })
   }
 }

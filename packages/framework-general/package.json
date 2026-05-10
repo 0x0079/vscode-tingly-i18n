@@ -25,6 +25,7 @@
     "@tingly/framework-contract": "workspace:*"
   },
   "devDependencies": {
+    "@tingly/test-kit": "workspace:*",
     "tsup": "^8.3.0",
     "typescript": "^5.6.3",
     "vitest": "^2.1.2"

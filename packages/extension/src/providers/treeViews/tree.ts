@@ -25,7 +25,6 @@ class TreeNodeItem extends vscode.TreeItem {
 
 export function registerTreeViews(loader: LocaleLoader): vscode.Disposable {
   const treeProvider: vscode.TreeDataProvider<TreeNodeItem> = {
-    onDidChangeTreeData: undefined,
     getTreeItem: x => x,
     getChildren(element) {
       const root: LocaleTreeBranch | undefined = loader.getTree()?.root

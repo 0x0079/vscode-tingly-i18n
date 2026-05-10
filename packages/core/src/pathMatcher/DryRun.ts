@@ -20,6 +20,12 @@ export interface DryRunReport {
   byNamespace: ReadonlyMap<string, readonly string[]>
 }
 
+/**
+ * Loose BCP-47-ish shape: 2–3 lowercase ASCII letters optionally followed by
+ * a region/script subtag (en-US, zh-Hans, pt_BR). Rejects names like 'README'.
+ */
+const LOCALE_SHAPE = /^[a-z]{2,3}(?:[-_][A-Za-z0-9]{2,4})?$/
+
 export function dryRun(input: DryRunInput): DryRunReport {
   const matches: DryRunMatch[] = []
   const unmatched: string[] = []
@@ -29,7 +35,7 @@ export function dryRun(input: DryRunInput): DryRunReport {
     let hit: DryRunMatch | undefined
     for (const matcher of input.matchers) {
       const parts = matcher.match(fp)
-      if (parts) {
+      if (parts && parts.locale && LOCALE_SHAPE.test(parts.locale)) {
         hit = { filepath: fp, matched: true, matcher, parts }
         break
       }

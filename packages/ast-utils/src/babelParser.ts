@@ -1,8 +1,8 @@
-import { parse, type ParserPlugin } from '@babel/parser'
+import { parse, type ParseResult, type ParserPlugin } from '@babel/parser'
 import type * as t from '@babel/types'
 
 export interface ParsedJs {
-  ast: t.File
+  ast: ParseResult<t.File>
   source: string
   errors: readonly string[]
 }
@@ -22,7 +22,7 @@ export function parseJs(input: ParseInput): ParsedJs {
   const cached = CACHE.get(input.uri)
   if (cached && cached.version === input.version && cached.hash === hash) return cached.result
 
-  let ast: t.File
+  let ast: ParseResult<t.File>
   const errors: string[] = []
   try {
     ast = parse(input.source, {
@@ -31,10 +31,11 @@ export function parseJs(input: ParseInput): ParsedJs {
       allowReturnOutsideFunction: true,
       allowAwaitOutsideFunction: true,
       errorRecovery: true,
-      plugins: pluginsFor(input.languageId)
+      plugins: [...pluginsFor(input.languageId)]
     })
-    if (Array.isArray(ast.errors)) {
-      for (const e of ast.errors) errors.push(String((e as Error).message ?? e))
+    const astErrors = ast.errors
+    if (Array.isArray(astErrors)) {
+      for (const e of astErrors) errors.push(String((e as Error).message ?? e))
     }
   } catch (e) {
     ast = emptyFile()
@@ -61,13 +62,14 @@ function pluginsFor(languageId: string): readonly ParserPlugin[] {
   return out
 }
 
-function emptyFile(): t.File {
+function emptyFile(): ParseResult<t.File> {
   return {
     type: 'File',
     program: { type: 'Program', body: [], directives: [], sourceType: 'module' },
     comments: [],
-    tokens: []
-  } as unknown as t.File
+    tokens: [],
+    errors: []
+  } as unknown as ParseResult<t.File>
 }
 
 function fnv1a(s: string): string {

@@ -62,6 +62,5 @@ export const GeneralFramework: Framework = {
   enableFeatures: { namespace: false, pluralization: false },
 
   // Lowest priority — always loses to a real adapter.
-  priority: 0,
-  compatibleWith: undefined
+  priority: 0
 }

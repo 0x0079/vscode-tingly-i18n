@@ -3,16 +3,12 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["node", "vscode"]
+    "types": [
+      "node",
+      "vscode"
+    ]
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../core" },
-    { "path": "../framework-contract" },
-    { "path": "../framework-general" },
-    { "path": "../framework-react" },
-    { "path": "../framework-vue" },
-    { "path": "../framework-next-intl" },
-    { "path": "../framework-svelte" }
+  "include": [
+    "src/**/*"
   ]
 }

@@ -9,7 +9,7 @@ export const YamlParser: ICoreParser = {
   extensions: ['.yml', '.yaml'],
   parse(source, ctx): ParsedFile {
     const nodes: LocaleNode[] = []
-    const errors: ParsedFile['errors'] = []
+    const errors: { message: string; offset?: number }[] = []
     const lines = source.split(/\r?\n/)
     const stack: { indent: number; path: string[] }[] = [{ indent: -1, path: [] }]
     let offset = 0

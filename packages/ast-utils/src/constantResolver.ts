@@ -65,8 +65,8 @@ function readObjectPath(
   let current: t.Node = obj
   for (const seg of segments) {
     if (current.type !== 'ObjectExpression') return undefined
-    const prop = current.properties.find(
-      p =>
+    const prop: t.ObjectExpression['properties'][number] | undefined = current.properties.find(
+      (p): boolean =>
         p.type === 'ObjectProperty' &&
         ((p.key.type === 'Identifier' && p.key.name === seg) ||
           (p.key.type === 'StringLiteral' && p.key.value === seg))
